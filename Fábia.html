@@ -219,7 +219,6 @@
       }
     }
 
-
     /* ✅ RESPONSIVIDADE PARA TODOS OS ECRÃS */
     @media (max-width: 600px) {
       .site {
@@ -357,73 +356,629 @@
     </div>
 
     <!-- PÁGINA 4 -->
+    <!-- ======= SUBSTITUIR AQUI: div id="surpresa" ======= -->
     <div id="surpresa" class="page">
-      <h2 class="subtitle">Surpresa Especial 🎁</h2>
-      <p class="message">Você é uma pessoa única, incrível e muito especial para mim! 💕</p>
-      <a href="#" class="button">Com Todo Carinho 💖</a>
+      <style>
+        /* Estilos específicos para a surpresa (mantém o look do teu site) */
+        #surpresa .card {
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9));
+          border-radius: 20px;
+          padding: 22px;
+          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.15);
+          text-align: center;
+          max-width: 460px;
+          margin: 0 auto;
+          position: relative;
+          overflow: visible;
+        }
+
+        #surpresa .big-title {
+          font-family: 'Great Vibes', cursive;
+          font-size: 44px;
+          color: #e85b8d;
+          margin-bottom: 6px;
+        }
+
+        #surpresa .lead {
+          font-size: 15px;
+          color: #444;
+          margin-bottom: 18px;
+        }
+
+        #surpresa .steps {
+          display: grid;
+          gap: 12px;
+          margin-top: 10px;
+        }
+
+        .surp-btn {
+          display: inline-block;
+          padding: 10px 16px;
+          border-radius: 999px;
+          background: linear-gradient(135deg, #ff8aa0, #ff5c8a);
+          color: #fff;
+          border: none;
+          cursor: pointer;
+          font-weight: 700;
+          box-shadow: 0 8px 20px rgba(255, 92, 138, 0.25);
+          transition: transform .14s ease;
+        }
+
+        .surp-btn:active {
+          transform: translateY(2px);
+        }
+
+        .choice {
+          background: rgba(255, 245, 250, 0.9);
+          border-radius: 12px;
+          padding: 12px;
+          cursor: pointer;
+          border: 1px solid rgba(232, 91, 141, 0.12);
+          transition: transform .12s ease, box-shadow .12s ease;
+        }
+
+        .choice:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 14px 30px rgba(232, 91, 141, 0.08);
+        }
+
+        .hidden {
+          display: none !important;
+        }
+
+        /* emotive reveal */
+        .reveal {
+          opacity: 0;
+          transform: translateY(8px) scale(.995);
+          transition: all 700ms cubic-bezier(.2, .9, .2, 1);
+        }
+
+        .reveal.show {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+
+        /* soft overlay & effect */
+        #surpresa .overlay {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          border-radius: 20px;
+        }
+
+        /* confetti canvas full-size inside page */
+        #confettiCanvas {
+          position: fixed;
+          left: 0;
+          top: 0;
+          width: 100vw;
+          height: 100vh;
+          pointer-events: none;
+          z-index: 9999;
+        }
+
+        /* final buttons */
+        .final-actions {
+          display: flex;
+          gap: 10px;
+          justify-content: center;
+          margin-top: 14px;
+          flex-wrap: wrap;
+        }
+
+        .ghost-btn {
+          background: transparent;
+          color: #e85b8d;
+          border: 2px solid rgba(232, 91, 141, 0.18);
+          padding: 8px 14px;
+          border-radius: 12px;
+          font-weight: 700;
+          cursor: pointer;
+        }
+
+        /* small responsive */
+        @media (max-width:420px) {
+          #surpresa .big-title {
+            font-size: 36px;
+          }
+
+          .surp-btn {
+            padding: 10px 12px;
+          }
+        }
+
+        /* ===== AJUSTE TOTAL RESPONSIVO DA SURPRESA ===== */
+
+        #surpresa {
+          padding: 18px 12px;
+        }
+
+        #surpresa .card {
+          width: 100%;
+          max-width: 520px;
+          margin: 0 auto;
+          padding: 18px 16px;
+          border-radius: clamp(16px, 4vw, 24px);
+        }
+
+        /* TÍTULO FLUIDO */
+        #surpresa .big-title {
+          font-size: clamp(28px, 6vw, 46px);
+          line-height: 1.1;
+        }
+
+        /* TEXTO FLUIDO */
+        #surpresa .lead,
+        #finalText p {
+          font-size: clamp(13px, 3.2vw, 16px);
+          line-height: 1.6;
+        }
+
+        /* BOTÕES RESPONSIVOS */
+        .surp-btn,
+        .ghost-btn {
+          font-size: clamp(12px, 3vw, 14px);
+          padding: 10px 16px;
+          min-width: 120px;
+        }
+
+        /* CHOICES FLEXÍVEIS */
+        #surpresa .steps {
+          width: 100%;
+        }
+
+        #surpresa .choice {
+          width: 100%;
+          max-width: 100%;
+          font-size: clamp(13px, 3.2vw, 15px);
+        }
+
+        /* BOLO FINAL AJUSTÁVEL */
+        #cake {
+          width: min(80vw, 240px) !important;
+          height: auto !important;
+          padding: 16px !important;
+        }
+
+        /* CANVAS SEM ESTOURAR EM TELEMÓVEL */
+        #confettiCanvas {
+          width: 100vw !important;
+          height: 100vh !important;
+        }
+
+        /* ===== TELEFONES MUITO PEQUENOS ===== */
+        @media (max-width: 360px) {
+          #surpresa .big-title {
+            font-size: 26px;
+          }
+
+          .surp-btn,
+          .ghost-btn {
+            padding: 8px 14px;
+            font-size: 12px;
+          }
+        }
+
+        /* ===== TABLETS ===== */
+        @media (min-width: 600px) {
+          #surpresa {
+            padding: 26px;
+          }
+
+          #surpresa .card {
+            padding: 28px;
+          }
+        }
+
+        /* ===== DESKTOP GRANDE ===== */
+        @media (min-width: 1024px) {
+          #surpresa .card {
+            max-width: 620px;
+          }
+
+          #surpresa .big-title {
+            font-size: 52px;
+          }
+        }
+      </style>
+
+      <div class="card" role="region" aria-labelledby="surpresaTitle" aria-describedby="surpresaDesc">
+        <div id="surpresaTitle" class="big-title">O Coração Por Trás da Armadura</div>
+        <div id="surpresaDesc" class="lead">Fábia — uma pequena jornada para mostrar o quanto és querida. Escolhe com o
+          coração 💖</div>
+
+        <!-- ETAPAS -->
+        <div id="stage-1" class="steps reveal show" aria-hidden="false">
+          <div class="choice" tabindex="0" data-answer="A">“Sou forte porque nunca chorei.”</div>
+          <div class="choice" tabindex="0" data-answer="B">“Sou forte porque já chorei muito… e continuei.”</div>
+          <div class="choice" tabindex="0" data-answer="C">“Sou forte porque não sinto nada.”</div>
+        </div>
+
+        <div id="stage-2" class="steps reveal hidden" aria-hidden="true">
+          <div class="lead">Escolhe o sabor que traduz o teu coração</div>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <div class="choice" tabindex="0" data-answer="sour">🍋 Azedo</div>
+            <div class="choice" tabindex="0" data-answer="bitter">🍫 Amargo</div>
+            <div class="choice" tabindex="0" data-answer="sweet">🍓 Doce</div>
+          </div>
+        </div>
+
+        <div id="stage-3" class="steps reveal hidden" aria-hidden="true">
+          <div class="lead">Por que usas a armadura?</div>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <div class="choice" tabindex="0" data-answer="notfeel">Para não sentir</div>
+            <div class="choice" tabindex="0" data-answer="protect">Para me proteger</div>
+            <div class="choice" tabindex="0" data-answer="habit">Porque sou assim</div>
+          </div>
+        </div>
+
+        <div id="final-stage" class="reveal hidden" aria-hidden="true" style="padding-top:8px;">
+          <div id="finalReveal"
+            style="min-height:170px; display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            <!-- Visual cake animation -->
+            <div id="cake"
+              style="width:220px;height:160px;border-radius:18px;background:linear-gradient(180deg,#fff7fb,#fff0f6);box-shadow:0 10px 30px rgba(232,91,141,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;">
+              <div style="font-size:26px;">🎂</div>
+              <div id="smallLine" style="font-weight:700;color:#e85b8d;margin-top:6px">Bolo da Fábia</div>
+            </div>
+
+            <div id="finalText" style="margin-top:12px;max-width:380px;" aria-live="polite"></div>
+
+            <div class="final-actions" style="margin-top:10px;">
+              <button class="ghost-btn" id="btn-prayer" aria-label="Oração e bênção">🙏 Oração & Bênção</button>
+              <button class="ghost-btn" id="btn-ty" aria-label="Agradecimento">💌 Agradecer</button>
+              <button class="surp-btn" id="btn-back" style="display:none;">🏠 Voltar ao Início</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px; font-size:13px; color:#888">Dica: escolhe com calma — cada escolha revela algo que
+          já sabemos sobre ti ♥</div>
+        <div class="overlay" aria-hidden="true"></div>
+      </div>
+
+      <!-- Canvas para confetti -->
+      <canvas id="confettiCanvas" class="hidden"></canvas>
+
+      <!-- ====== JavaScript da surpresa (auto-contido) ====== -->
+      <script>
+        (function () {
+          // Elementos
+          const s1 = document.getElementById('stage-1');
+          const s2 = document.getElementById('stage-2');
+          const s3 = document.getElementById('stage-3');
+          const final = document.getElementById('final-stage');
+          const finalText = document.getElementById('finalText');
+          const btnPrayer = document.getElementById('btn-prayer');
+          const btnTY = document.getElementById('btn-ty');
+          const btnBack = document.getElementById('btn-back');
+          const confCanvas = document.getElementById('confettiCanvas');
+
+          // state
+          let chosen = { q1: null, q2: null, q3: null };
+
+          // helper: show/hide with nice reveal
+          function show(el) {
+            el.classList.remove('hidden');
+            setTimeout(() => el.classList.add('show'), 40);
+            el.setAttribute('aria-hidden', 'false');
+          }
+          function hide(el) {
+            el.classList.remove('show');
+            setTimeout(() => el.classList.add('hidden'), 340);
+            el.setAttribute('aria-hidden', 'true');
+          }
+
+          // stage 1 interactions
+          s1.querySelectorAll('.choice').forEach(ch => {
+            ch.addEventListener('click', () => handleQ1(ch.dataset.answer));
+            ch.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') handleQ1(ch.dataset.answer); });
+          });
+
+          function handleQ1(ans) {
+            chosen.q1 = ans;
+            // feedback text
+            if (ans === 'B') {
+              // correct "insightful" choice
+              showTinyToast("A tua força é persistência — seguimos.");
+            } else {
+              showTinyToast("Mesmo assim, o teu coração é incrível.");
+            }
+            // move to stage 2
+            hide(s1);
+            setTimeout(() => show(s2), 420);
+          }
+
+          // stage 2
+          s2.querySelectorAll('.choice').forEach(ch => {
+            ch.addEventListener('click', () => handleQ2(ch.dataset.answer));
+            ch.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') handleQ2(ch.dataset.answer); });
+          });
+
+          function handleQ2(ans) {
+            chosen.q2 = ans;
+            if (ans === 'sweet') {
+              showTinyToast("Doce — a escolha que revela o teu jeito.");
+            } else {
+              showTinyToast("Cada sabor diz algo bonito sobre ti.");
+            }
+            hide(s2);
+            setTimeout(() => show(s3), 420);
+          }
+
+          // stage 3
+          s3.querySelectorAll('.choice').forEach(ch => {
+            ch.addEventListener('click', () => handleQ3(ch.dataset.answer));
+            ch.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') handleQ3(ch.dataset.answer); });
+          });
+
+          function handleQ3(ans) {
+            chosen.q3 = ans;
+            hide(s3);
+            setTimeout(() => revealFinal(), 480);
+          }
+
+          // tiny toast for feedback
+          function showTinyToast(text) {
+            const t = document.createElement('div');
+            t.textContent = text;
+            t.style.position = 'fixed';
+            t.style.left = '50%';
+            t.style.transform = 'translateX(-50%)';
+            t.style.bottom = '38px';
+            t.style.background = 'linear-gradient(135deg,#fff,#fff5f7)';
+            t.style.padding = '10px 16px';
+            t.style.borderRadius = '12px';
+            t.style.boxShadow = '0 10px 30px rgba(0,0,0,0.12)';
+            t.style.fontWeight = '700';
+            t.style.color = '#6b3547';
+            t.style.zIndex = '9999';
+            document.body.appendChild(t);
+            setTimeout(() => t.style.opacity = '0', 1800);
+            setTimeout(() => t.remove(), 2300);
+          }
+
+          // Final reveal content (friendship + prayer/bênção)
+          function revealFinal() {
+            // Prepare final text (tailored tone: reserved & sweet)
+            const part1 = "Fábia, tu és mais do que parece. Por fora, uma armadura que protege. Por dentro, um coração que sabe amar.";
+            const part2 = "A tua doçura aparece nos gestos tranquilos, nas pequenas coisas, no cuidado que só quem te conhece percebe.";
+            const friendship = "Obrigado por seres essa amiga verdadeira — por cada silêncio que fala, por cada gesto discreto que sustenta. A tua amizade é um presente que ilumina muitos dias.";
+            const prayer = "Que Deus te cubra de paz, te dê força nos dias difíceis, e multiplique a tua alegria. Que a fé te sustente, a esperança te guie, e o amor te acompanhe sempre.";
+
+            // set final text gradually
+            finalText.innerHTML = `<p style="font-weight:700; color:#5a2b3b; margin-bottom:6px;">${part1}</p>
+                               <p style="color:#533042; margin-bottom:6px;">${part2}</p>
+                               <hr style="border:none;border-top:1px dashed rgba(85,38,56,0.06);margin:8px 0;">
+                               <p style="font-weight:700;color:#6b2f47;margin-bottom:6px;">${friendship}</p>
+                               <p style="color:#3f2a33;margin-bottom:0;">${prayer}</p>`;
+
+            // show final area
+            show(final);
+
+            // animate cake (simple subtle)
+            const cake = document.getElementById('cake');
+            cake.animate([
+              { transform: 'translateY(10px) scale(.98)' },
+              { transform: 'translateY(0px) scale(1)' },
+              { transform: 'translateY(6px) scale(.995)' },
+              { transform: 'translateY(0px) scale(1)' }
+            ], { duration: 1600, iterations: Infinity });
+
+            // start confetti + gentle music-like chime (web audio)
+            startConfetti();
+            playChime();
+
+            // show actions
+            document.getElementById('btn-prayer').style.display = 'inline-block';
+            document.getElementById('btn-ty').style.display = 'inline-block';
+            btnBack.style.display = 'inline-block';
+          }
+
+          // Buttons: prayer shows slightly different emphasis text in modal-like reveal
+          btnPrayer.addEventListener('click', () => {
+            finalText.innerHTML = `<p style="font-weight:700;color:#5a2b47;">Uma pequena oração para ti</p>
+          <p style="color:#3f2a33;">Senhor, abençoa a Fábia com paz, dá-lhe força para cada manhã, alegria nas pequenas vitórias e serenidade no coração. Amém.</p>`;
+            showTinyToast("Bênção enviada 🤍");
+          });
+
+          btnTY.addEventListener('click', () => {
+            finalText.innerHTML = `<p style="font-weight:700;color:#6b2f47;">Obrigado por existires, Fábia</p><p style="color:#3f2a33;">A tua amizade é um farol — que ilumina sem pedir nada em troca. Obrigado por seres tu.</p>`;
+            showTinyToast("Mensagem de amizade destacada 💌");
+          });
+
+          btnBack.addEventListener('click', () => {
+            // stop confetti & audio
+            stopConfetti();
+            stopChime();
+            // return to home
+            const homeBtn = document.querySelector("nav button[onclick=\"showPage('home')\"]");
+            if (homeBtn) homeBtn.click();
+            else window.location.hash = ''; // fallback
+          });
+
+          // ---------------- Confetti (lightweight) ----------------
+          let confettiInterval = null;
+          function startConfetti() {
+            confCanvas.classList.remove('hidden');
+            const ctx = confCanvas.getContext('2d');
+            confCanvas.width = window.innerWidth;
+            confCanvas.height = window.innerHeight;
+            const pieces = [];
+            const colors = ['#ffd6e0', '#ffdbe6', '#ff9fb8', '#ff7aa8', '#e86b93', '#ffd0dd'];
+
+            for (let i = 0; i < 120; i++) {
+              pieces.push({
+                x: Math.random() * confCanvas.width,
+                y: Math.random() * -confCanvas.height,
+                w: 6 + Math.random() * 10,
+                h: 8 + Math.random() * 12,
+                r: Math.random() * 360,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speed: 1 + Math.random() * 3,
+                rotSpeed: (Math.random() - 0.5) * 8
+              });
+            }
+
+            function draw() {
+              ctx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+              for (const p of pieces) {
+                p.y += p.speed;
+                p.x += Math.sin(p.y * 0.01) * 1.2;
+                p.r += p.rotSpeed * 0.02;
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.r * Math.PI / 180);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                ctx.restore();
+
+                if (p.y > confCanvas.height + 30) {
+                  p.y = -20 - Math.random() * confCanvas.height;
+                  p.x = Math.random() * confCanvas.width;
+                }
+              }
+            }
+
+            confettiInterval = setInterval(draw, 1000 / 60);
+          }
+
+          function stopConfetti() {
+            confCanvas.classList.add('hidden');
+            if (confettiInterval) { clearInterval(confettiInterval); confettiInterval = null; }
+          }
+
+          // ---------------- Subtle chime using WebAudio ----------------
+          let audioCtx, osc;
+          function playChime() {
+            try {
+              audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+              osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(520, audioCtx.currentTime);
+              gain.gain.setValueAtTime(0, audioCtx.currentTime);
+              osc.connect(gain);
+              gain.connect(audioCtx.destination);
+              gain.gain.linearRampToValueAtTime(0.02, audioCtx.currentTime + 0.02);
+              osc.start();
+              gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 6);
+              setTimeout(() => { if (osc) osc.stop(); }, 6200);
+            } catch (e) { /* no audio available */ }
+          }
+          function stopChime() {
+            try { if (osc) { osc.stop(); osc = null; } if (audioCtx) { audioCtx.close(); audioCtx = null; } } catch (e) { }
+          }
+
+          // Accessibility: keyboard support for first stage (focus first)
+          setTimeout(() => {
+            const first = s1.querySelector('.choice');
+            if (first) first.focus();
+          }, 350);
+
+          // ensure canvas resizes
+          window.addEventListener('resize', () => {
+            if (!confCanvas.classList.contains('hidden')) {
+              confCanvas.width = window.innerWidth;
+              confCanvas.height = window.innerHeight;
+            }
+          });
+
+          // close/start safety: stop audio/confetti when leaving page
+          window.addEventListener('pagehide', () => { stopConfetti(); stopChime(); });
+        })();
+      </script>
     </div>
+    <!-- ======= FIM da nova seção SURPRESA ======= -->
 
-  </div>
+    <!-- Corações animados -->
+    <script>
+      function createHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerHTML = '❤';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = 3 + Math.random() * 5 + 's';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 8000);
+      }
 
-  <!-- Corações animados -->
-  <script>
-    function createHeart() {
-      const heart = document.createElement('div');
-      heart.classList.add('heart');
-      heart.innerHTML = '❤';
-      heart.style.left = Math.random() * 100 + 'vw';
-      heart.style.animationDuration = 3 + Math.random() * 5 + 's';
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 8000);
-    }
+      setInterval(createHeart, 350);
 
-    setInterval(createHeart, 350);
+      // 💌 Mensagens de Felicitação, Carinho e Conselho
+      const mensagens = [
+        "🎉 Fábia, que este novo ano da sua vida seja cheio de vitórias, saúde, amor e muitos sonhos realizados!",
+        "💖 Você é uma pessoa iluminada, de coração puro e sorriso que transforma qualquer dia em algo especial.",
+        "🌟 Nunca duvide da sua força. Você é capaz de coisas incríveis, mesmo nos dias em que não se sente assim.",
+        "🙏 Que Deus te cubra de bênçãos hoje e sempre, te guiando por caminhos de paz e felicidade.",
+        "🌈 Nos dias difíceis, lembre-se que tudo passa, mas a sua luz permanece.",
+        "✨ Que a sua vida seja leve, colorida e cheia de momentos que aquecem o coração.",
+        "💎 Conselho de amigo: acredite mais em você, porque você já é incrível do jeito que é.",
+        "🥰 Que nunca lhe falte amor, carinho, amigos verdadeiros e motivos para sorrir.",
+        "🎂 Parabéns, Fábia! Que cada novo dia seja um presente maravilhoso para a sua vida!"
+      ];
 
-    // 💌 Mensagens de Felicitação, Carinho e Conselho
-    const mensagens = [
-      "🎉 Fábia, que este novo ano da sua vida seja cheio de vitórias, saúde, amor e muitos sonhos realizados!",
-      "💖 Você é uma pessoa iluminada, de coração puro e sorriso que transforma qualquer dia em algo especial.",
-      "🌟 Nunca duvide da sua força. Você é capaz de coisas incríveis, mesmo nos dias em que não se sente assim.",
-      "🙏 Que Deus te cubra de bênçãos hoje e sempre, te guiando por caminhos de paz e felicidade.",
-      "🌈 Nos dias difíceis, lembre-se que tudo passa, mas a sua luz permanece.",
-      "✨ Que a sua vida seja leve, colorida e cheia de momentos que aquecem o coração.",
-      "💎 Conselho de amigo: acredite mais em você, porque você já é incrível do jeito que é.",
-      "🥰 Que nunca lhe falte amor, carinho, amigos verdadeiros e motivos para sorrir.",
-      "🎂 Parabéns, Fábia! Que cada novo dia seja um presente maravilhoso para a sua vida!"
-    ];
+      let indiceMensagem = 0;
+      const elementoMensagem = document.getElementById('mensagemRotativa');
 
-    let indiceMensagem = 0;
-    const elementoMensagem = document.getElementById('mensagemRotativa');
+      function mostrarMensagem() {
+        elementoMensagem.textContent = mensagens[indiceMensagem];
+        indiceMensagem = (indiceMensagem + 1) % mensagens.length;
+      }
 
-    function mostrarMensagem() {
-      elementoMensagem.textContent = mensagens[indiceMensagem];
-      indiceMensagem = (indiceMensagem + 1) % mensagens.length;
-    }
+      function proximaMensagem() {
+        mostrarMensagem();
+      }
 
-    function proximaMensagem() {
+      // Auto troca a cada 5 segundos
       mostrarMensagem();
-    }
+      setInterval(mostrarMensagem, 5000);
 
-    // Auto troca a cada 5 segundos
-    mostrarMensagem();
-    setInterval(mostrarMensagem, 5000);
+      function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+      }
 
-    function showPage(id) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
+      // 🎞️ CARROSSEL AUTOMÁTICO SUAVE
+      let slides = document.querySelectorAll(".slide");
+      let indexSlide = 0;
 
-    // 🎞️ CARROSSEL AUTOMÁTICO SUAVE
-    let slides = document.querySelectorAll(".slide");
-    let indexSlide = 0;
+      function trocarSlide() {
+        slides.forEach(slide => slide.classList.remove("active"));
+        slides[indexSlide].classList.add("active");
+        indexSlide = (indexSlide + 1) % slides.length;
+      }
+      setInterval(trocarSlide, 5000); // Troca lenta e suave a cada 5 segundos
 
-    function trocarSlide() {
-      slides.forEach(slide => slide.classList.remove("active"));
-      slides[indexSlide].classList.add("active");
-      indexSlide = (indexSlide + 1) % slides.length;
-    }
-    setInterval(trocarSlide, 5000); // Troca lenta e suave a cada 5 segundos
-  </script>
+      // 🎮 JOGO DO CORAÇÃO
+      let massa = "";
+      let recheio = "";
+
+      function escolherMassa(opcao) {
+        massa = opcao;
+        document.getElementById("etapa1").style.display = "none";
+        document.getElementById("etapa2").style.display = "block";
+      }
+
+      function escolherRecheio(opcao) {
+        recheio = opcao;
+        document.getElementById("etapa2").style.display = "none";
+        document.getElementById("etapa3").style.display = "block";
+      }
+
+      function finalizarBolo(cobertura) {
+        document.getElementById("etapa3").style.display = "none";
+        document.getElementById("resultado").style.display = "block";
+
+        document.getElementById("boloFinal").innerHTML = `
+      🎂 Seu bolo perfeito foi criado assim:<br><br>
+      🧁 Massa: <b>${massa}</b><br>
+      🍮 Recheio: <b>${recheio}</b><br>
+      🍓 Cobertura: <b>${cobertura}</b><br><br>
+      O bolo ficou simplesmente… INCRÍVEL! Assim como você 💖
+    `;
+      }
+    </script>
 
 </body>
 
