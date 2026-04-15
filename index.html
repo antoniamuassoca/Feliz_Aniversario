@@ -155,14 +155,125 @@
     </div>
 
     <div id="memorando" class="page">
-      <h2 class="subtitle">Memorando</h2>
-      <div class="memo-container">
-        <div class="memo-input-area">
-          <textarea id="memoText" class="memo-textarea" placeholder="Escreve aqui as tuas notas e memorandos..."></textarea>
-          <button class="button" onclick="saveMemo()">Guardar Memorando</button>
+      <h2 class="subtitle">Seu Diário Pessoal</h2>
+      <div class="diary-container">
+        
+        <!-- Botão Adicionar Memorando -->
+        <button class="button button-add-memo" onclick="openMemoModal()">+ Criar Novo Memorando</button>
+        
+        <!-- Filtros e Pesquisa -->
+        <div class="diary-controls">
+          <input type="text" id="searchMemo" class="search-input" placeholder="Pesquisar por título ou conteúdo..." onkeyup="filterMemos()">
+          <select id="categoryFilter" class="category-filter" onchange="filterMemos()">
+            <option value="">Todas as categorias</option>
+            <option value="Momentos">Momentos</option>
+            <option value="Pensamentos">Pensamentos</option>
+            <option value="Sonhos">Sonhos</option>
+            <option value="Fotos">Fotos</option>
+            <option value="Segredos">Segredos</option>
+          </select>
         </div>
-        <div id="memoDisplay" class="memo-display"></div>
+        
+        <!-- Lista de Memorandos -->
+        <div id="memosList" class="memos-list"></div>
+        
       </div>
+      
+      <!-- Modal para Criar/Editar Memorando -->
+      <div id="memoModal" class="modal-memo">
+        <div class="modal-memo-content">
+          <span class="close-memo" onclick="closeMemoModal()">&times;</span>
+          <h3 id="modalTitle">Criar Novo Memorando</h3>
+          
+          <form id="memoForm" onsubmit="saveMemoItem(event)">
+            <!-- Título -->
+            <div class="form-group">
+              <label>Título</label>
+              <input type="text" id="memoItemTitle" required placeholder="Dê um nome ao seu memorando...">
+            </div>
+            
+            <!-- Categoria -->
+            <div class="form-group">
+              <label>Categoria</label>
+              <select id="memoItemCategory" required>
+                <option value="">Selecione uma categoria</option>
+                <option value="Momentos">Momentos</option>
+                <option value="Pensamentos">Pensamentos</option>
+                <option value="Sonhos">Sonhos</option>
+                <option value="Fotos">Fotos</option>
+                <option value="Segredos">Segredos</option>
+              </select>
+            </div>
+            
+            <!-- Data -->
+            <div class="form-group">
+              <label>Data</label>
+              <input type="date" id="memoItemDate">
+            </div>
+            
+            <!-- Emoção -->
+            <div class="form-group">
+              <label>Como você se sente?</label>
+              <div class="emotion-selector">
+                <input type="radio" name="emotion" value="Feliz"> Feliz
+                <input type="radio" name="emotion" value="Triste"> Triste
+                <input type="radio" name="emotion" value="Apaixonada"> Apaixonada
+                <input type="radio" name="emotion" value="Saudade"> Saudade
+                <input type="radio" name="emotion" value="Pensativa"> Pensativa
+                <input type="radio" name="emotion" value="Cansada"> Cansada
+              </div>
+            </div>
+            
+            <!-- Descrição -->
+            <div class="form-group">
+              <label>O que você quer guardar?</label>
+              <textarea id="memoItemContent" placeholder="Escreva seus pensamentos, sentimentos, histórias..." rows="6"></textarea>
+            </div>
+            
+            <!-- Upload de Imagem -->
+            <div class="form-group">
+              <label>Adicionar Imagem</label>
+              <div class="upload-area" onclick="document.getElementById('memoImageInput').click()">
+                <p>Clique para adicionar uma foto</p>
+              </div>
+              <input type="file" id="memoImageInput" accept="image/*" style="display: none;" onchange="previewMemoImage()">
+              <div id="memoImagePreview" class="image-preview"></div>
+            </div>
+            
+            <!-- Upload de Música -->
+            <div class="form-group">
+              <label>Adicionar Música (opcional)</label>
+              <div class="upload-area" onclick="document.getElementById('memoAudioInput').click()">
+                <p>Clique para adicionar uma música</p>
+              </div>
+              <input type="file" id="memoAudioInput" accept="audio/*" style="display: none;" onchange="previewMemoAudio()">
+              <div id="memoAudioPreview" class="audio-preview"></div>
+            </div>
+            
+            <!-- Privacidade -->
+            <div class="form-group">
+              <label>
+                <input type="checkbox" id="memoPrivate"> Privado (apenas você vê)
+              </label>
+            </div>
+            
+            <!-- Botões -->
+            <div class="form-buttons">
+              <button type="button" class="button-cancel" onclick="closeMemoModal()">Cancelar</button>
+              <button type="submit" class="button">Guardar Memorando</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Modal para Ver Memorando Completo -->
+      <div id="viewMemoModal" class="modal-memo">
+        <div class="modal-memo-content modal-view">
+          <span class="close-memo" onclick="closeViewModal()">&times;</span>
+          <div id="viewMemoContent"></div>
+        </div>
+      </div>
+      
       <a href="#" class="button" onclick="showPage('home')">Voltar ao Início</a>
     </div>
 

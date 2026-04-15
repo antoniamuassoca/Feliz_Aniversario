@@ -546,15 +546,19 @@ function loadMemo() {
 document.addEventListener('DOMContentLoaded', () => {
   loadMemo();
   
-  // Load saved images and songs from localStorage
+  // Load saved images, songs, and memos from localStorage
   loadSavedImages();
   loadSavedSongs();
+  loadMemos();
   
   // Initialize carousel
   updateCarousel();
   
   // Initialize playlist
   updatePlaylist();
+  
+  // Initialize memos display
+  displayMemos();
   
   // Add click to main image to open modal
   document.getElementById('mainImage').onclick = () => openModal(images[currentImageIndex]);
@@ -564,6 +568,23 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Start random image transitions every 5 seconds
   setInterval(randomImageTransition, 5000);
+  
+  // Close modals when clicking outside
+  window.onclick = (event) => {
+    const memoModal = document.getElementById('memoModal');
+    const viewMemoModal = document.getElementById('viewMemoModal');
+    const imageModal = document.getElementById('imageModal');
+    
+    if (event.target === memoModal) {
+      closeMemoModal();
+    }
+    if (event.target === viewMemoModal) {
+      closeViewModal();
+    }
+    if (event.target === imageModal) {
+      closeModal();
+    }
+  };
 });
 
 // Music player functionality
@@ -708,4 +729,352 @@ function updatePlaylist() {
     
     playlist.appendChild(item);
   });
+}
+
+// ============ DIARY/MEMORANDO SYSTEM ============
+
+// Diary data
+let memos = [];
+let currentEditingId = null;
+
+// Load memos from localStorage
+function loadMemos() {
+  const saved = localStorage.getItem('fabiaDiaryMemos');
+  if (saved) {
+    try {
+      memos = JSON.parse(saved);
+    } catch (e) {
+      console.error('Error loading memos:', e);
+      memos = [];
+    }
+  }
+}
+
+// Save memos to localStorage
+function saveMemos() {
+  localStorage.setItem('fabiaDiaryMemos', JSON.stringify(memos));
+}
+
+// Open memo creation modal
+function openMemoModal() {
+  currentEditingId = null;
+  document.getElementById('memoForm').reset();
+  document.getElementById('modalTitle').textContent = 'Criar Novo Memorando';
+  document.getElementById('memoModal').classList.add('show');
+  document.getElementById('memoImagePreview').innerHTML = '';
+  document.getElementById('memoAudioPreview').innerHTML = '';
+  
+  // Set today's date as default
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('memoItemDate').value = today;
+}
+
+// Close memo modal
+function closeMemoModal() {
+  document.getElementById('memoModal').classList.remove('show');
+}
+
+// Close view modal
+function closeViewModal() {
+  document.getElementById('viewMemoModal').classList.remove('show');
+}
+
+// Preview image
+function previewMemoImage() {
+  const input = document.getElementById('memoImageInput');
+  const preview = document.getElementById('memoImagePreview');
+  
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// Preview audio
+function previewMemoAudio() {
+  const input = document.getElementById('memoAudioInput');
+  const preview = document.getElementById('memoAudioPreview');
+  
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      preview.innerHTML = `<audio controls style="width: 100%;"><source src="${e.target.result}"></audio>`;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// Save memo item
+function saveMemoItem(event) {
+  event.preventDefault();
+  
+  const title = document.getElementById('memoItemTitle').value;
+  const category = document.getElementById('memoItemCategory').value;
+  const date = document.getElementById('memoItemDate').value;
+  const emotion = document.querySelector('input[name="emotion"]:checked')?.value || 'Feliz';
+  const content = document.getElementById('memoItemContent').value;
+  const isPrivate = document.getElementById('memoPrivate').checked;
+  
+  let image = null;
+  let audio = null;
+  
+  // Get image data URL
+  const imageInput = document.getElementById('memoImageInput');
+  if (imageInput.files && imageInput.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      image = e.target.result;
+      saveAudio();
+    };
+    reader.readAsDataURL(imageInput.files[0]);
+    return; // Continue with saveAudio
+  } else {
+    saveAudio();
+  }
+  
+  function saveAudio() {
+    const audioInput = document.getElementById('memoAudioInput');
+    if (audioInput.files && audioInput.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        audio = e.target.result;
+        finalSave();
+      };
+      reader.readAsDataURL(audioInput.files[0]);
+    } else {
+      finalSave();
+    }
+  }
+  
+  function finalSave() {
+    if (currentEditingId) {
+      // Update existing memo
+      const memoIndex = memos.findIndex(m => m.id === currentEditingId);
+      if (memoIndex >= 0) {
+        memos[memoIndex] = {
+          id: currentEditingId,
+          title,
+          category,
+          date,
+          emotion,
+          content,
+          image: image || memos[memoIndex].image,
+          audio: audio || memos[memoIndex].audio,
+          isPrivate,
+          createdAt: memos[memoIndex].createdAt,
+          updatedAt: new Date().toISOString()
+        };
+      }
+    } else {
+      // Create new memo
+      const newMemo = {
+        id: Date.now().toString(),
+        title,
+        category,
+        date,
+        emotion,
+        content,
+        image,
+        audio,
+        isPrivate,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      memos.unshift(newMemo);
+    }
+    
+    saveMemos();
+    closeMemoModal();
+    displayMemos();
+  }
+}
+
+// Edit memo
+function editMemo(id) {
+  const memo = memos.find(m => m.id === id);
+  if (!memo) return;
+  
+  currentEditingId = id;
+  
+  // Fill form with memo data
+  document.getElementById('memoItemTitle').value = memo.title;
+  document.getElementById('memoItemCategory').value = memo.category;
+  document.getElementById('memoItemDate').value = memo.date;
+  document.getElementById('memoItemContent').value = memo.content;
+  document.getElementById('memoPrivate').checked = memo.isPrivate;
+  
+  // Set emotion radio
+  const emotionRadio = document.querySelector(`input[name="emotion"][value="${memo.emotion}"]`);
+  if (emotionRadio) emotionRadio.checked = true;
+  
+  // Show existing image if any
+  const imagePreview = document.getElementById('memoImagePreview');
+  if (memo.image) {
+    imagePreview.innerHTML = `<img src="${memo.image}" alt="Preview">`;
+  }
+  
+  // Show existing audio if any
+  const audioPreview = document.getElementById('memoAudioPreview');
+  if (memo.audio) {
+    audioPreview.innerHTML = `<audio controls style="width: 100%;"><source src="${memo.audio}"></audio>`;
+  }
+  
+  document.getElementById('modalTitle').textContent = 'Editar Memorando';
+  document.getElementById('memoModal').classList.add('show');
+}
+
+// Delete memo
+function deleteMemo(id) {
+  if (confirm('Tem certeza que quer apagar este memorando?')) {
+    memos = memos.filter(m => m.id !== id);
+    saveMemos();
+    displayMemos();
+  }
+}
+
+// View memo full content
+function viewMemo(id) {
+  const memo = memos.find(m => m.id === id);
+  if (!memo) return;
+  
+  const formatDate = (dateStr) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateStr).toLocaleDateString('pt-PT', options);
+  };
+  
+  let html = `
+    <div class="memo-title">${memo.title}</div>
+    <div class="memo-meta">
+      <span>${formatDate(memo.date)}</span>
+      <span>${memo.emotion}</span>
+      <span>${memo.category}</span>
+      ${memo.isPrivate ? '<span>Privado</span>' : ''}
+    </div>
+  `;
+  
+  if (memo.image) {
+    html += `<img src="${memo.image}" class="memo-image" alt="Memória">`;
+  }
+  
+  html += `<div class="memo-content">${memo.content}</div>`;
+  
+  if (memo.audio) {
+    html += `<audio controls style="width: 100%;"><source src="${memo.audio}"></audio>`;
+  }
+  
+  html += `
+    <div class="memo-actions" style="margin-top: 20px;">
+      <button onclick="editMemo('${id}')">✏️ Editar</button>
+      <button class="delete-btn" onclick="deleteMemo('${id}')">🗑️ Apagar</button>
+      <button onclick="closeViewModal()">Fechar</button>
+    </div>
+  `;
+  
+  document.getElementById('viewMemoContent').innerHTML = html;
+  document.getElementById('viewMemoModal').classList.add('show');
+}
+
+// Display memos in list
+function displayMemos() {
+  const memosList = document.getElementById('memosList');
+  
+  if (memos.length === 0) {
+    memosList.innerHTML = '<div class="empty-state"><p>Comece criando seu primeiro memorando!</p></div>';
+    return;
+  }
+  
+  let html = '';
+  memos.forEach(memo => {
+    const preview = memo.content.substring(0, 100) + (memo.content.length > 100 ? '...' : '');
+    const formatDate = (dateStr) => {
+      const options = { month: 'short', day: 'numeric' };
+      return new Date(dateStr).toLocaleDateString('pt-PT', options);
+    };
+    
+    html += `
+      <div class="memo-item">
+        <div class="memo-header">
+          <div>
+            <div class="memo-title">${memo.title}</div>
+            <div class="memo-category">${memo.category}</div>
+          </div>
+        </div>
+        <div class="memo-meta">
+          <span>${formatDate(memo.date)}</span>
+          <span class="memo-emotion">${memo.emotion}</span>
+          ${memo.isPrivate ? '<span>Privado</span>' : ''}
+          ${memo.image ? '<span>Foto</span>' : ''}
+          ${memo.audio ? '<span>Audio</span>' : ''}
+        </div>
+        <div class="memo-preview">${preview}</div>
+        ${memo.image ? `<img src="${memo.image}" class="memo-image" alt="Foto">` : ''}
+        <div class="memo-actions">
+          <button onclick="viewMemo('${memo.id}')">Ver</button>
+          <button onclick="editMemo('${memo.id}')">Editar</button>
+          <button class="delete-btn" onclick="deleteMemo('${memo.id}')">Apagar</button>
+        </div>
+      </div>
+    `;
+  });
+  
+  memosList.innerHTML = html;
+}
+
+// Filter memos
+function filterMemos() {
+  const searchTerm = document.getElementById('searchMemo').value.toLowerCase();
+  const categoryFilter = document.getElementById('categoryFilter').value;
+  
+  const filtered = memos.filter(memo => {
+    const matchesSearch = memo.title.toLowerCase().includes(searchTerm) || 
+                         memo.content.toLowerCase().includes(searchTerm);
+    const matchesCategory = !categoryFilter || memo.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
+  
+  const memosList = document.getElementById('memosList');
+  
+  if (filtered.length === 0) {
+    memosList.innerHTML = '<div class="empty-state"><p>Nenhum memorando encontrado.</p></div>';
+    return;
+  }
+  
+  let html = '';
+  filtered.forEach(memo => {
+    const preview = memo.content.substring(0, 100) + (memo.content.length > 100 ? '...' : '');
+    const formatDate = (dateStr) => {
+      const options = { month: 'short', day: 'numeric' };
+      return new Date(dateStr).toLocaleDateString('pt-PT', options);
+    };
+    
+    html += `
+      <div class="memo-item">
+        <div class="memo-header">
+          <div>
+            <div class="memo-title">${memo.title}</div>
+            <div class="memo-category">${memo.category}</div>
+          </div>
+        </div>
+        <div class="memo-meta">
+          <span>${formatDate(memo.date)}</span>
+          <span class="memo-emotion">${memo.emotion}</span>
+          ${memo.isPrivate ? '<span>Privado</span>' : ''}
+          ${memo.image ? '<span>Foto</span>' : ''}
+          ${memo.audio ? '<span>Audio</span>' : ''}
+        </div>
+        <div class="memo-preview">${preview}</div>
+        ${memo.image ? `<img src="${memo.image}" class="memo-image" alt="Foto">` : ''}
+        <div class="memo-actions">
+          <button onclick="viewMemo('${memo.id}')">Ver</button>
+          <button onclick="editMemo('${memo.id}')">Editar</button>
+          <button class="delete-btn" onclick="deleteMemo('${memo.id}')">Apagar</button>
+        </div>
+      </div>
+    `;
+  });
+  
+  memosList.innerHTML = html;
 }
