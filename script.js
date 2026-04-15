@@ -16,6 +16,10 @@
     {
       title: "Os Teus Olhos",
       message: "Os teus olhos contam histórias que as palavras não conseguem. Há neles uma profundidade que poucos conseguem ver, mas que transforma quem te conhece."
+    },
+    {
+      title: "Teu Jeito de Cuidar",
+      message: "Nos pequenos gestos, no olhar atento, no cuidado silencioso. É aí que mora a tua grandeza: fazer o outro se sentir especial sem esforço, só sendo você."
     }
   ];
 
