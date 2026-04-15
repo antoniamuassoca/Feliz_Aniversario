@@ -1,223 +1,180 @@
-// Surprise section JavaScript
-(function () {
-  const s1 = document.getElementById('stage-1');
-  const s2 = document.getElementById('stage-2');
-  const s3 = document.getElementById('stage-3');
-  const final = document.getElementById('final-stage');
-  const finalText = document.getElementById('finalText');
-  const btnPrayer = document.getElementById('btn-prayer');
-  const btnTY = document.getElementById('btn-ty');
-  const btnBack = document.getElementById('btn-back');
-  const confCanvas = document.getElementById('confettiCanvas');
+// Surprise Page JavaScript - Emotional Revelation Experience
+(function() {
+  let surpriseMusic = null;
+  let isMusicPlaying = false;
 
-  let chosen = { q1: null, q2: null, q3: null };
-
-  function show(el) {
-    el.classList.remove('hidden');
-    setTimeout(() => el.classList.add('show'), 40);
-    el.setAttribute('aria-hidden', 'false');
-  }
-  function hide(el) {
-    el.classList.remove('show');
-    setTimeout(() => el.classList.add('hidden'), 340);
-    el.setAttribute('aria-hidden', 'true');
-  }
-
-  s1.querySelectorAll('.choice').forEach(ch => {
-    ch.addEventListener('click', () => handleQ1(ch.dataset.answer));
-    ch.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') handleQ1(ch.dataset.answer); });
-  });
-
-  function handleQ1(ans) {
-    chosen.q1 = ans;
-    if (ans === 'B') {
-      showTinyToast("A tua força é persistência — seguimos.");
-    } else {
-      showTinyToast("Mesmo assim, o teu coração é incrível.");
+  // Gallery messages for each image
+  const galleryMessages = [
+    {
+      title: "O Teu Sorriso",
+      message: "Aquele sorriso que aparece nas horas mais inesperadas. É como se o sol resolvesse brilhar no meio da chuva. Ilumina tudo ao redor sem que percebas o quanto és especial."
+    },
+    {
+      title: "A Tua Força Silenciosa",
+      message: "Não gritas, não reclama. Apenas segues em frente. É nessa quietude que vejo a tua verdadeira força - aquela que não precisa de aplausos para existir."
+    },
+    {
+      title: "Os Teus Olhos",
+      message: "Os teus olhos contam histórias que as palavras não conseguem. Há neles uma profundidade que poucos conseguem ver, mas que transforma quem te conhece."
     }
-    hide(s1);
-    setTimeout(() => show(s2), 420);
-  }
+  ];
 
-  s2.querySelectorAll('.choice').forEach(ch => {
-    ch.addEventListener('click', () => handleQ2(ch.dataset.answer));
-    ch.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') handleQ2(ch.dataset.answer); });
-  });
-
-  function handleQ2(ans) {
-    chosen.q2 = ans;
-    if (ans === 'sweet') {
-      showTinyToast("Doce — a escolha que revela o teu jeito.");
-    } else {
-      showTinyToast("Cada sabor diz algo bonito sobre ti.");
+  // Hidden messages
+  const hiddenMessages = [
+    {
+      title: "Uma Confissão",
+      message: "Às vezes penso que Deus te criou especialmente para mostrar ao mundo como é ser verdadeiramente bom. És um exemplo vivo de que a bondade existe."
+    },
+    {
+      title: "O Que Admiro em Ti",
+      message: "Admiro como consegues ser forte sem perder a doçura. Como manténs a fé mesmo nos dias mais difíceis. Como amas sem esperar nada em troca."
+    },
+    {
+      title: "Um Segredo",
+      message: "O teu maior dom não é o que fazes, mas quem és. És uma pessoa que deixa o mundo melhor só por existir. Isso é raro e precioso."
     }
-    hide(s2);
-    setTimeout(() => show(s3), 420);
-  }
+  ];
 
-  s3.querySelectorAll('.choice').forEach(ch => {
-    ch.addEventListener('click', () => handleQ3(ch.dataset.answer));
-    ch.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') handleQ3(ch.dataset.answer); });
-  });
+  // Open surprise - transition from entrance to content
+  window.openSurprise = function() {
+    const entrance = document.getElementById('surprise-entrance');
+    const content = document.getElementById('surprise-content');
 
-  function handleQ3(ans) {
-    chosen.q3 = ans;
-    hide(s3);
-    setTimeout(() => revealFinal(), 480);
-  }
+    entrance.classList.remove('entrance-active');
+    entrance.classList.add('content-hidden');
 
-  function showTinyToast(text) {
-    const t = document.createElement('div');
-    t.textContent = text;
-    t.style.position = 'fixed';
-    t.style.left = '50%';
-    t.style.transform = 'translateX(-50%)';
-    t.style.bottom = '38px';
-    t.style.background = 'linear-gradient(135deg,#fff,#fff5f7)';
-    t.style.padding = '10px 16px';
-    t.style.borderRadius = '12px';
-    t.style.boxShadow = '0 10px 30px rgba(0,0,0,0.12)';
-    t.style.fontWeight = '700';
-    t.style.color = '#495057';
-    t.style.zIndex = '9999';
-    document.body.appendChild(t);
-    setTimeout(() => t.style.opacity = '0', 1800);
-    setTimeout(() => t.remove(), 2300);
-  }
+    setTimeout(() => {
+      entrance.style.display = 'none';
+      content.classList.remove('content-hidden');
+      content.classList.add('content-active');
 
-  function revealFinal() {
-    const part1 = "Fábia, tu és mais do que parece. Por fora, uma armadura que protege. Por dentro, um coração que sabe amar.";
-    const part2 = "A tua doçura aparece nos gestos tranquilos, nas pequenas coisas, no cuidado que só quem te conhece percebe.";
-    const friendship = "Obrigado por seres essa amiga verdadeira — por cada silêncio que fala, por cada gesto discreto que sustenta. A tua amizade é um presente que ilumina muitos dias.";
-    const prayer = "Que Deus te cubra de paz, te dê força nos dias difíceis, e multiplique a tua alegria. Que a fé te sustente, a esperança te guie, e o amor te acompanhe sempre.";
+      // Start music automatically
+      startSurpriseMusic();
+    }, 1000);
+  };
 
-    finalText.innerHTML = `<p style="font-weight:700; color:#343a40; margin-bottom:6px;">${part1}</p>
-                       <p style="color:#495057; margin-bottom:6px;">${part2}</p>
-                       <hr style="border:none;border-top:1px dashed rgba(108,117,125,0.2);margin:8px 0;">
-                       <p style="font-weight:700;color:#6c757d;margin-bottom:6px;">${friendship}</p>
-                       <p style="color:#6c757d;margin-bottom:0;">${prayer}</p>`;
-
-    show(final);
-
-    const cake = document.getElementById('cake');
-    cake.animate([
-      { transform: 'translateY(10px) scale(.98)' },
-      { transform: 'translateY(0px) scale(1)' },
-      { transform: 'translateY(6px) scale(.995)' },
-      { transform: 'translateY(0px) scale(1)' }
-    ], { duration: 1600, iterations: Infinity });
-
-    startConfetti();
-    playChime();
-
-    document.getElementById('btn-prayer').style.display = 'inline-block';
-    document.getElementById('btn-ty').style.display = 'inline-block';
-    btnBack.style.display = 'inline-block';
-  }
-
-  btnPrayer.addEventListener('click', () => {
-    finalText.innerHTML = `<p style="font-weight:700;color:#343a40;">Uma pequena oração para ti</p>
-  <p style="color:#495057;">Senhor, abençoa a Fábia com paz, dá-lhe força para cada manhã, alegria nas pequenas vitórias e serenidade no coração. Amém.</p>`;
-    showTinyToast("Bênção enviada.");
-  });
-
-  btnTY.addEventListener('click', () => {
-    finalText.innerHTML = `<p style="font-weight:700;color:#343a40;">Obrigado por existires, Fábia</p><p style="color:#495057;">A tua amizade é um farol — que ilumina sem pedir nada em troca. Obrigado por seres tu.</p>`;
-    showTinyToast("Mensagem de amizade destacada.");
-  });
-
-  btnBack.addEventListener('click', () => {
-    stopConfetti();
-    stopChime();
-    const homeBtn = document.querySelector("nav button[onclick=\"showPage('home')\"]");
-    if (homeBtn) homeBtn.click();
-    else window.location.hash = '';
-  });
-
-  let confettiInterval = null;
-  function startConfetti() {
-    confCanvas.classList.remove('hidden');
-    const ctx = confCanvas.getContext('2d');
-    confCanvas.width = window.innerWidth;
-    confCanvas.height = window.innerHeight;
-    const pieces = [];
-    const colors = ['#f8f9fa', '#e9ecef', '#dee2e6', '#adb5bd', '#6c757d'];
-
-    for (let i = 0; i < 100; i++) {
-      pieces.push({
-        x: Math.random() * confCanvas.width,
-        y: Math.random() * -confCanvas.height,
-        w: 8 + Math.random() * 12,
-        h: 10 + Math.random() * 14,
-        r: Math.random() * 360,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        speed: 1 + Math.random() * 2,
-        rotSpeed: (Math.random() - 0.5) * 6
+  // Music control functions
+  function startSurpriseMusic() {
+    surpriseMusic = document.getElementById('surpriseMusic');
+    if (surpriseMusic) {
+      surpriseMusic.volume = 0.3; // Soft volume
+      surpriseMusic.play().then(() => {
+        isMusicPlaying = true;
+        updateMusicButton();
+      }).catch(() => {
+        // Handle autoplay restrictions
+        console.log('Autoplay blocked - user interaction required');
       });
     }
+  }
 
-    function draw() {
-      ctx.clearRect(0, 0, confCanvas.width, confCanvas.height);
-      for (const p of pieces) {
-        p.y += p.speed;
-        p.x += Math.sin(p.y * 0.01) * 1.5;
-        p.r += p.rotSpeed * 0.02;
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.r * Math.PI / 180);
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-        ctx.restore();
+  window.toggleSurpriseMusic = function() {
+    if (!surpriseMusic) return;
 
-        if (p.y > confCanvas.height + 30) {
-          p.y = -20 - Math.random() * confCanvas.height;
-          p.x = Math.random() * confCanvas.width;
-        }
+    if (isMusicPlaying) {
+      surpriseMusic.pause();
+      isMusicPlaying = false;
+    } else {
+      surpriseMusic.play();
+      isMusicPlaying = true;
+    }
+    updateMusicButton();
+  };
+
+  function updateMusicButton() {
+    const icon = document.getElementById('musicIcon');
+    const text = document.getElementById('musicText');
+
+    if (icon && text) {
+      if (isMusicPlaying) {
+        icon.textContent = '🎵';
+        text.textContent = 'Pausar Música';
+      } else {
+        icon.textContent = '🔇';
+        text.textContent = 'Tocar Música';
       }
     }
-
-    confettiInterval = setInterval(draw, 1000 / 60);
   }
 
-  function stopConfetti() {
-    confCanvas.classList.add('hidden');
-    if (confettiInterval) { clearInterval(confettiInterval); confettiInterval = null; }
-  }
+  // Gallery message functions
+  window.showGalleryMessage = function(index) {
+    if (index >= galleryMessages.length) return;
 
-  let audioCtx, osc;
-  function playChime() {
-    try {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0, audioCtx.currentTime);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      gain.gain.linearRampToValueAtTime(0.03, audioCtx.currentTime + 0.02);
-      osc.start();
-      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 5);
-      setTimeout(() => { if (osc) osc.stop(); }, 5500);
-    } catch (e) { }
-  }
-  function stopChime() {
-    try { if (osc) { osc.stop(); osc = null; } if (audioCtx) { audioCtx.close(); audioCtx = null; } } catch (e) { }
-  }
+    const message = galleryMessages[index];
+    const modal = document.getElementById('galleryModal');
+    const content = document.getElementById('galleryMessageContent');
 
-  setTimeout(() => {
-    const first = s1.querySelector('.choice');
-    if (first) first.focus();
-  }, 350);
+    content.innerHTML = `
+      <h3 style="color: #ff69b4; margin-bottom: 1rem; font-family: 'Playfair Display', serif;">${message.title}</h3>
+      <p style="line-height: 1.6; color: #4a4a4a; font-style: italic;">${message.message}</p>
+    `;
 
-  window.addEventListener('resize', () => {
-    if (!confCanvas.classList.contains('hidden')) {
-      confCanvas.width = window.innerWidth;
-      confCanvas.height = window.innerHeight;
+    modal.classList.add('show');
+  };
+
+  window.closeGalleryModal = function() {
+    const modal = document.getElementById('galleryModal');
+    modal.classList.remove('show');
+  };
+
+  // Hidden message functions
+  window.revealHiddenMessage = function(index) {
+    if (index >= hiddenMessages.length) return;
+
+    const message = hiddenMessages[index];
+    const modal = document.getElementById('hiddenMessageModal');
+    const content = document.getElementById('hiddenMessageContent');
+
+    content.innerHTML = `
+      <h3 style="color: #ff69b4; margin-bottom: 1rem; font-family: 'Playfair Display', serif;">${message.title}</h3>
+      <p style="line-height: 1.6; color: #4a4a4a; font-style: italic;">${message.message}</p>
+    `;
+
+    modal.classList.add('show');
+
+    // Add a subtle animation to the clue that was clicked
+    const clues = document.querySelectorAll('.message-clue');
+    if (clues[index]) {
+      clues[index].style.animation = 'none';
+      setTimeout(() => {
+        clues[index].style.animation = 'gentlePulse 2s ease-in-out';
+      }, 10);
+    }
+  };
+
+  window.closeHiddenMessageModal = function() {
+    const modal = document.getElementById('hiddenMessageModal');
+    modal.classList.remove('show');
+  };
+
+  // Close modals when clicking outside
+  document.addEventListener('click', function(event) {
+    const galleryModal = document.getElementById('galleryModal');
+    const hiddenModal = document.getElementById('hiddenMessageModal');
+
+    if (event.target === galleryModal) {
+      closeGalleryModal();
+    }
+    if (event.target === hiddenModal) {
+      closeHiddenMessageModal();
     }
   });
 
-  window.addEventListener('pagehide', () => { stopConfetti(); stopChime(); });
+  // Handle page navigation to stop music when leaving surprise page
+  const originalShowPage = window.showPage;
+  window.showPage = function(pageId) {
+    // Stop music when leaving surprise page
+    if (surpriseMusic && isMusicPlaying) {
+      surpriseMusic.pause();
+      isMusicPlaying = false;
+    }
+
+    // Call original function
+    if (originalShowPage) {
+      originalShowPage(pageId);
+    }
+  };
+
 })();
 
 // Main page JavaScript

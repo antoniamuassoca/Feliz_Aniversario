@@ -278,59 +278,138 @@
     </div>
 
     <div id="surpresa" class="page">
-
-      <div class="card" role="region" aria-labelledby="surpresaTitle" aria-describedby="surpresaDesc">
-        <div id="surpresaTitle" class="big-title">O Coração Por Trás da Armadura</div>
-        <div id="surpresaDesc" class="lead">Fábia — uma pequena jornada para mostrar o quanto és querida. Escolhe com o coração.</div>
-
-        <div id="stage-1" class="steps reveal show" aria-hidden="false">
-          <div class="choice" tabindex="0" data-answer="A">"Sou forte porque nunca chorei."</div>
-          <div class="choice" tabindex="0" data-answer="B">"Sou forte porque já chorei muito, e continuei."</div>
-          <div class="choice" tabindex="0" data-answer="C">"Sou forte porque não sinto nada."</div>
-        </div>
-
-        <div id="stage-2" class="steps reveal hidden" aria-hidden="true">
-          <div class="lead">Escolhe o sabor que traduz o teu coração</div>
-          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-            <div class="choice" tabindex="0" data-answer="sour">Azedo</div>
-            <div class="choice" tabindex="0" data-answer="bitter">Amargo</div>
-            <div class="choice" tabindex="0" data-answer="sweet">Doce</div>
+      <!-- Tela de Entrada -->
+      <div id="surprise-entrance" class="surprise-section entrance-active">
+        <div class="entrance-background">
+          <div class="entrance-content">
+            <h1 class="entrance-title">Tenho algo para ti...</h1>
+            <button class="entrance-button" onclick="openSurprise()">Abrir</button>
           </div>
         </div>
-
-        <div id="stage-3" class="steps reveal hidden" aria-hidden="true">
-          <div class="lead">Por que usas a armadura?</div>
-          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-            <div class="choice" tabindex="0" data-answer="notfeel">Para não sentir</div>
-            <div class="choice" tabindex="0" data-answer="protect">Para me proteger</div>
-            <div class="choice" tabindex="0" data-answer="habit">Porque sou assim</div>
-          </div>
-        </div>
-
-        <div id="final-stage" class="reveal hidden" aria-hidden="true" style="padding-top:8px;">
-          <div id="finalReveal"
-            style="min-height:170px; display:flex;flex-direction:column;align-items:center;justify-content:center;">
-            <div id="cake"
-              style="width:220px;height:160px;border-radius:18px;background:linear-gradient(180deg,#fff7fb,#fff0f6);box-shadow:0 10px 30px rgba(232,91,141,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;">
-              <div id="smallLine" style="font-weight:700;color:#495057;margin-top:6px">Bolo da Fábia</div>
-            </div>
-
-            <div id="finalText" style="margin-top:12px;max-width:380px;" aria-live="polite"></div>
-
-            <div class="final-actions" style="margin-top:10px;">
-              <button class="ghost-btn" id="btn-prayer" aria-label="Oração e bênção">Oração e Bênção</button>
-              <button class="ghost-btn" id="btn-ty" aria-label="Agradecimento">Agradecer</button>
-              <button class="surp-btn" id="btn-back" style="display:none;">Voltar ao Início</button>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top:14px; font-size:13px; color:#888">Dica: escolhe com calma — cada escolha revela algo que já sabemos sobre ti.</div>
-        <div class="overlay" aria-hidden="true"></div>
       </div>
 
-      <canvas id="confettiCanvas" class="hidden"></canvas>
+      <!-- Conteúdo Principal da Surpresa -->
+      <div id="surprise-content" class="surprise-section content-hidden">
+        <!-- Música Automática -->
+        <audio id="surpriseMusic" loop preload="auto">
+          <source src="music/Flor que Não Murcha.mp3" type="audio/mpeg">
+          <source src="music/Flor que Não Murcha.ogg" type="audio/ogg">
+        </audio>
 
+        <!-- Mensagem Principal -->
+        <div class="surprise-message">
+          <h2 class="message-title">Para ti</h2>
+          <div class="message-content">
+            <p>Não é sobre grandes coisas... é sobre tudo o que você representa sem perceber.</p>
+            <p>É sobre aquela força que aparece quando menos esperas. Aquela fé que te mantém de pé mesmo nos dias mais difíceis. Aquela forma de sorrir que ilumina tudo ao redor.</p>
+            <p>Você é mais do que imagina. E eu vejo isso todos os dias.</p>
+          </div>
+        </div>
+
+        <!-- Galeria Surpresa -->
+        <div class="surprise-gallery">
+          <h3 class="gallery-title">Momentos que me fazem sorrir</h3>
+          <div class="gallery-grid">
+            <div class="gallery-item" onclick="showGalleryMessage(0)">
+              <img src="img/memory1.jpg" alt="Memória especial" onerror="this.src='img/placeholder.jpg'">
+              <div class="gallery-overlay">
+                <span class="gallery-text">Clique para ver</span>
+              </div>
+            </div>
+            <div class="gallery-item" onclick="showGalleryMessage(1)">
+              <img src="img/memory2.jpg" alt="Memória especial" onerror="this.src='img/placeholder.jpg'">
+              <div class="gallery-overlay">
+                <span class="gallery-text">Clique para ver</span>
+              </div>
+            </div>
+            <div class="gallery-item" onclick="showGalleryMessage(2)">
+              <img src="img/memory3.jpg" alt="Memória especial" onerror="this.src='img/placeholder.jpg'">
+              <div class="gallery-overlay">
+                <span class="gallery-text">Clique para ver</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mensagens Escondidas -->
+        <div class="hidden-messages">
+          <div class="message-clue" onclick="revealHiddenMessage(0)">
+            <span class="clue-text">Clique aqui</span>
+          </div>
+          <div class="message-clue" onclick="revealHiddenMessage(1)">
+            <span class="clue-text">Abre-me</span>
+          </div>
+          <div class="message-clue" onclick="revealHiddenMessage(2)">
+            <span class="clue-text">Lê isto</span>
+          </div>
+        </div>
+
+        <!-- O que eu vejo em ti -->
+        <div class="what-i-see">
+          <h3 class="see-title">O que eu vejo em ti</h3>
+          <div class="qualities-list">
+            <div class="quality-item">
+              <span class="quality-icon">•</span>
+              <span class="quality-text">A tua força silenciosa</span>
+            </div>
+            <div class="quality-item">
+              <span class="quality-icon">•</span>
+              <span class="quality-text">A tua fé inabalável</span>
+            </div>
+            <div class="quality-item">
+              <span class="quality-icon">•</span>
+              <span class="quality-text">O teu sorriso que ilumina</span>
+            </div>
+            <div class="quality-item">
+              <span class="quality-icon">•</span>
+              <span class="quality-text">A tua forma de nunca desistir</span>
+            </div>
+            <div class="quality-item">
+              <span class="quality-icon">•</span>
+              <span class="quality-text">O teu coração generoso</span>
+            </div>
+            <div class="quality-item">
+              <span class="quality-icon">•</span>
+              <span class="quality-text">A tua luz interior</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mensagem Final -->
+        <div class="final-message">
+          <div class="final-content">
+            <p class="final-text">Se um dia duvidares do teu valor, volta aqui.</p>
+            <p class="final-text">Lembra-te: és mais forte do que imaginas, mais amada do que sabes, e mais especial do que mereces.</p>
+            <div class="final-signature">
+              <span>Com todo o meu carinho</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controles de Música -->
+        <div class="music-controls">
+          <button class="music-btn" onclick="toggleSurpriseMusic()">
+            <span id="musicIcon">🎵</span>
+            <span id="musicText">Pausar Música</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal para mensagens da galeria -->
+      <div id="galleryModal" class="modal-surprise">
+        <div class="modal-content-surprise">
+          <span class="close-modal" onclick="closeGalleryModal()">&times;</span>
+          <div id="galleryMessageContent"></div>
+        </div>
+      </div>
+
+      <!-- Modal para mensagens escondidas -->
+      <div id="hiddenMessageModal" class="modal-surprise">
+        <div class="modal-content-surprise">
+          <span class="close-modal" onclick="closeHiddenMessageModal()">&times;</span>
+          <div id="hiddenMessageContent"></div>
+        </div>
+      </div>
     </div>
 
   <script src="script.js"></script>
